@@ -5,6 +5,7 @@ coding pascal_triangle with given number of rows
 
 
 def pascal_triangle(n):
+    """ coding pascal_triangle """
     if n <= 0:
         return []
     else:
