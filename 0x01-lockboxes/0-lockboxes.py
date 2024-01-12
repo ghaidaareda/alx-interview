@@ -9,13 +9,14 @@ from typing import List
 
 def canUnlockAll(boxes: List[List[int]]) -> bool:
     """method that determines if all the boxes can be opened"""
-    unlocked = set()
+    if boxes:
+        unlocked = set()
 
-    def search(box):
-        """ add unlocked boxes"""
-        unlocked.add(box)
-        for i in boxes[box]:
-            if i not in unlocked:
-                search(i)
-    search(0)
-    return len(unlocked) == len(boxes)
+        def search(box):
+            """ add unlocked boxes"""
+            unlocked.add(box)
+            for i in boxes[box]:
+                if i not in unlocked:
+                    search(i)
+        search(0)
+        return len(unlocked) == len(boxes)
