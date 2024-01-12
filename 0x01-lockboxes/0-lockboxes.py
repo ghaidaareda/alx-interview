@@ -19,4 +19,7 @@ def canUnlockAll(boxes: List[List[int]]) -> bool:
                 if i not in unlocked:
                     search(i)
         search(0)
-        return len(unlocked) == len(boxes)
+        if len(unlocked) == len(boxes):
+            return True
+        else:
+             return False
