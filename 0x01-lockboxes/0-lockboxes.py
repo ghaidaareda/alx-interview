@@ -5,6 +5,9 @@ Each box is numbered sequentially from 0 to n - 1
 and each box may contain keys to the other boxes.
 """
 from typing import List
+import sys
+
+sys.setrecursionlimit(5000)
 
 
 def canUnlockAll(boxes: List[List[int]]) -> bool:
