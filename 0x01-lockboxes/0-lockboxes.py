@@ -16,8 +16,8 @@ def canUnlockAll(boxes: List[List[int]]) -> bool:
 
     def search(box):
         """ add unlocked boxes"""
+        unlocked.add(box)
         for i in boxes[box]:
-            unlocked.add(box)
             if 0 <= i < n and i not in unlocked:
                 search(i)
     search(0)
