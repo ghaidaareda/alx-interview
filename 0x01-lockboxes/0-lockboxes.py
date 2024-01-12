@@ -1,16 +1,15 @@
 #!/usr/bin/python3
 """
 You have n number of locked boxes in front of you.
-Each box is numbered sequentially from 0 to n - 1
+Each box is numbered sequentially from 0 to n - 1 
 and each box may contain keys to the other boxes.
 """
 from typing import List
-
-
-def canUnlockAll(boxes: List[List]):
+def canUnlockAll(boxes: List[List[int]]) -> bool:
+    """method that determines if all the boxes can be opened"""
     unlocked = set()
-
     def search(box):
+        """ add unlocked boxes"""
         unlocked.add(box)
         for i in boxes[box]:
             if i not in unlocked:
