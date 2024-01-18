@@ -4,15 +4,14 @@ get numb of operations
 """
 
 
+from sympy import factorint
+
+
 def minOperations(n):
-    """ min number of operation"""
+    """ min operation used"""
     if n < 2:
         return 0  # It's not possible to achieve n if n is less than 2
 
-    operations = 0
-    for i in range(2, n + 1):
-        while n % i == 0:
-            operations += i
-            n //= i
-
+    factors = factorint(n)
+    operations = sum(k * v for k, v in factors.items())
     return operations
