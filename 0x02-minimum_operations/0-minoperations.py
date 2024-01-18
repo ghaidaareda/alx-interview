@@ -6,8 +6,8 @@ get numb of operations
 
 def minOperations(n):
     """ min number of operation"""
-    if n < 2:
-        return 0  # It's not possible to achieve n if n is less than 2
+    if not n and not isinstance(n, int) and n < 2:
+        return 0
 
     operations = 0
     for i in range(2, n + 1):
