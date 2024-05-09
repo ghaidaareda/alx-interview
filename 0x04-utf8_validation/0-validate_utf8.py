@@ -6,7 +6,7 @@ represents a valid UTF-8 encoding
 
 
 def validUTF8(data):
-    # Number of bytes in the current UTF-8 character
+    """ Number of bytes in the current UTF-8 character"""
     num_bytes = 0
 
     for byte in data:
