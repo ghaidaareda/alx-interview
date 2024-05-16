@@ -1,33 +1,39 @@
+#!/usr/bin/python3
+"""
+Log parsing
+"""
+
 import sys
 
-def print_metrics(metrics):
-    print("Total file size:", metrics['total_size'])
-    for code in sorted(metrics['status_codes']):
-        print(f"{code}: {metrics['status_codes'][code]}")
+if __name__ == '__main__':
 
-def process_line(line, metrics):
-    parts = line.split()
-    if len(parts) != 7:
-        return  # Skip lines with incorrect format
-    try:
-        code = int(parts[4])
-        size = int(parts[5])
-    except ValueError:
-        return  # Skip lines with non-integer status code or file size
-    metrics['total_size'] += size
-    metrics['status_codes'][code] = metrics['status_codes'].get(code, 0) + 1
+    filesize, count = 0, 0
+    codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
+    stats = {k: 0 for k in codes}
 
-def main():
-    metrics = {'total_size': 0, 'status_codes': {}}
+    def print_stats(stats: dict, file_size: int) -> None:
+        print("File size: {:d}".format(filesize))
+        for k, v in sorted(stats.items()):
+            if v:
+                print("{}: {}".format(k, v))
+
     try:
-        lines_processed = 0
         for line in sys.stdin:
-            process_line(line.strip(), metrics)
-            lines_processed += 1
-            if lines_processed % 10 == 0:
-                print_metrics(metrics)
+            count += 1
+            data = line.split()
+            try:
+                status_code = data[-2]
+                if status_code in stats:
+                    stats[status_code] += 1
+            except BaseException:
+                pass
+            try:
+                filesize += int(data[-1])
+            except BaseException:
+                pass
+            if count % 10 == 0:
+                print_stats(stats, filesize)
+        print_stats(stats, filesize)
     except KeyboardInterrupt:
-        print_metrics(metrics)
-
-if __name__ == "__main__":
-    main()
+        print_stats(stats, filesize)
+        raise
