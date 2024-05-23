@@ -1,25 +1,24 @@
-#!/usr/bin/node
-const request = require('request');
-const API_URL = 'https://swapi-api.hbtn.io/api';
+const axios = require('axios');
 
-if (process.argv.length > 2) {
-  request(`${API_URL}/films/${process.argv[2]}/`, (err, _, body) => {
-    if (err) {
-      console.log(err);
+async function getMovieCharacters(movieId) {
+    try {
+        const response = await axios.get(`https://swapi.dev/api/films/${movieId}/`);
+        const movieData = response.data;
+        const charactersUrls = movieData.characters;
+
+        for (const characterUrl of charactersUrls) {
+            const characterResponse = await axios.get(characterUrl);
+            const characterData = characterResponse.data;
+            console.log(characterData.name);
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error.message);
     }
-    const charactersURL = JSON.parse(body).characters;
-    const charactersName = charactersURL.map(
-      url => new Promise((resolve, reject) => {
-        request(url, (promiseErr, __, charactersReqBody) => {
-          if (promiseErr) {
-            reject(promiseErr);
-          }
-          resolve(JSON.parse(charactersReqBody).name);
-        });
-      }));
+}
 
-    Promise.all(charactersName)
-      .then(names => console.log(names.join('\n')))
-      .catch(allErr => console.log(allErr));
-  });
+const movieId = process.argv[2];
+if (!movieId) {
+    console.error('Please provide a movie ID as a command line argument.');
+} else {
+    getMovieCharacters(movieId);
 }
