@@ -1,36 +1,42 @@
 #!/usr/bin/python3
 """
-Log parsing (interview task)
+script read stdin and return spacific out put
 """
-
 import sys
 
-def print_stats(total_size, status_counts):
-    print("File size: {}".format(total_size))
-    sorted_status = sorted(status_counts.items(), key=lambda x: int(x[0]))
-    for code, count in sorted_status:
-        print("{}: {}".format(code, count))
 
-def main():
-    total_size = 0
-    status_counts = {}
+def print_metrics(fsize=int, scode=dict) -> str:
+    """
+    function to print totalfilesize, statuscodes in ascending order
+    """
+    print("File size: {}".format(fsize))
+    for code in sorted(scode.keys()):
+        if scode[code] > 0:
+            print("{}: {}".format(code, scode[code]))
 
-    try:
-        line_count = 0
-        for line in sys.stdin:
-            line_count += 1
-            parts = line.split()
-            if len(parts) != 10:
-                continue
-            status_code = parts[8]
-            if status_code.isdigit() and int(status_code) in [200, 301, 400, 401, 403, 404, 405, 500]:
-                total_size += int(parts[9])
-                status_counts[status_code] = status_counts.get(status_code, 0) + 1
-            if line_count % 10 == 0:
-                print_stats(total_size, status_counts)
-    except KeyboardInterrupt:
-        print_stats(total_size, status_counts)
-        sys.exit(0)
 
-if __name__ == "__main__":
-    main()
+status_count = {"200": 0, "301": 0, "400": 0, "401": 0, "403": 0,
+                "404": 0, '405': 0, "500": 0}
+total_size = 0
+count = 0
+
+try:
+    for line in sys.stdin:
+        if count == 10:
+            print_metrics(total_size, status_count)
+            count = 0
+        pline = line.strip().split()
+        count += 1
+        try:
+            file_size = int(pline[-1])
+            code = pline[-2]
+        except (ValueError, IndexError):
+            continue
+        total_size += file_size
+        if code in status_count:
+            status_count[code] += 1
+    print_metrics(total_size, status_count)
+
+except KeyboardInterrupt:
+    print_metrics(total_size, status_count)
+    raise
